@@ -9,8 +9,12 @@ php:
 
 env:
   matrix:
-    - PREFER_LOWEST="--prefer-lowest"
-    - PREFER_LOWEST=""
+    - PREFER_LOWEST="--prefer-lowest" SF_VERSION="~2.7"
+    - PREFER_LOWEST="" SF_VERSION="~2.7"
+    - PREFER_LOWEST="--prefer-lowest" SF_VERSION="~3.0"
+    - PREFER_LOWEST="" SF_VERSION="~3.0"
+    - PREFER_LOWEST="--prefer-lowest" SF_VERSION="~4.0"
+    - PREFER_LOWEST="" SF_VERSION="~4.0"
 
 matrix:
   allow_failures:
@@ -23,7 +27,10 @@ cache:
 
 before_script:
   - composer selfupdate
-  - composer install
+  - composer require "symfony/console:${SF_VERSION}" --no-update
+  - composer require "symfony/stopwatch:${SF_VERSION}" --no-update
+  - composer require "symfony/process:${SF_VERSION}" --no-update
+  - composer update $PREFER_LOWEST
 
 script:
   - find tests/ -name "*Test.php" | php fastest -v
